@@ -1,17 +1,18 @@
-export enum UserRoles {
-    CLIENT = "CLIENTE",
-    ADMIN = "ADMINISTRADOR",
+export interface Roles {
+  _id: string;
+  name: UserRoles;
 }
 
+export enum UserRoles {
+  CLIENT = "CLIENTE",
+  ADMIN = "ADMINISTRADOR",
+  UNDEFINED = "UNDEFINED",
+}
 
 export interface User {
-    id: string;
-    dni: string;
-    email: string;
-    lastName: string;
-    firstName: string;
-    phone: string;
-    address: string;
-    password: string;
-    role: UserRoles;
+  userId: string;
+  personId: string;
+  names: string;
+  email: string;
+  roles: Roles[];
 }

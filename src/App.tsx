@@ -1,12 +1,17 @@
 import { MantineProvider } from "@mantine/core";
-import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
+import "@mantine/core/styles.css";
+import { SnackbarProvider } from "notistack";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { PublicRoutes } from "./models/routes";
 import Login from "./pages/Login/Login";
 import Register from "./pages/Register/Register";
+import { SnackbarManagerConfigurator } from "./utils";
 
 function App() {
-    return (
-      <MantineProvider>
+  return (
+    <MantineProvider>
+      <SnackbarProvider>
+        <SnackbarManagerConfigurator />
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Navigate to="/login" />} />
@@ -14,8 +19,9 @@ function App() {
             {<Route path={PublicRoutes.register} element={<Register />} />}
           </Routes>
         </BrowserRouter>
-      </MantineProvider>
-    );
+      </SnackbarProvider>
+    </MantineProvider>
+  );
 }
 
 export default App;

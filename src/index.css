@@ -1,11 +1,14 @@
-@tailwind base;
+@layer tailwind {
+  @tailwind base;
+}
+
 @tailwind components;
 @tailwind utilities;
 
-body,
+/* body,
 html,
 #root {
-    height: 100%;
-    padding: 0;
-    background-color: #2196f3;
-}
+  height: 100%;
+  padding: 0;
+  background-color: #2196f3;
+} */
