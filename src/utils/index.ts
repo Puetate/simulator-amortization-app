@@ -1,3 +1,2 @@
-export * from './getValidationError';
-export * from './snackbarManager';
-
+export * from "./index";
+export * from "./snackbarManager";

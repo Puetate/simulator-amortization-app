@@ -4,9 +4,14 @@ export interface PublicRoutes {
   register: string;
 }
 
-export interface UserRoutes {}
+export interface UserRoutes {
+  amortization: string;
+}
 
-export interface AdminRoutes {}
+export interface AdminRoutes {
+  company: string;
+  companyCreate: string;
+}
 
 export const PublicRoutes: PublicRoutes = {
   default: "/",
@@ -15,7 +20,7 @@ export const PublicRoutes: PublicRoutes = {
 };
 
 export const UserRoutes: UserRoutes = {
-  amortization: "/amortization",
+  amortization: "/user/amortization",
 };
 
 export const AdminRoutes: AdminRoutes = {
