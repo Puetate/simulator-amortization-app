@@ -1,8 +1,9 @@
-import { Box, Button, Text,TextInput } from "@mantine/core";
+import { Box, Button, Text, TextInput, PasswordInput } from "@mantine/core";
 import logo from "../../../assets/logo.png";
 import { Link } from "react-router-dom";
-import { PublicRoutes } from "../../../models/routes";
+import { AdminRoutes, PublicRoutes, UserRoutes } from "../../../models/routes";
 import { useSessionStore } from "../../../store";
+import { useNavigate } from "react-router-dom";
 import * as Yup from "yup";
 import { useForm, yupResolver } from "@mantine/form";
 import loginService from "../services/loginService";
@@ -26,7 +27,7 @@ const validationSchema = Yup.object<Credentials>().shape({
 
 export default function FormLogin() {
     const { setUser, setToken } = useSessionStore();
-
+    const navigate = useNavigate();
 
     const form = useForm({
         initialValues,
@@ -39,6 +40,7 @@ export default function FormLogin() {
         if (res.user && res.token) {
             setUser(res.user);
             setToken(res.token);
+            navigate(AdminRoutes.company);
         } 
     }
 
@@ -73,7 +75,7 @@ export default function FormLogin() {
                 {...form.getInputProps("email")}
                 />
 
-                <TextInput
+                <PasswordInput
                 id="password"
                 name="password"
                 type="password"
