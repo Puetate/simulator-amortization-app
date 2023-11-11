@@ -35,8 +35,8 @@ export default function Amortization() {
     if (!amortization) return;
     setLoadingCreditType(true);
     const res = await getIndirectPaymentByCreditTypeIdService(amortization);
-    setCreditTypeIndirectPayments(res);
-    setMonths(res.creditType.minTime);
+    setCreditTypeIndirectPayments(res.data!);
+    setMonths(res.data!.creditType.minTime);
     setLoadingCreditType(false);
   };
 
@@ -54,13 +54,13 @@ export default function Amortization() {
 
   useEffect(() => {
     getCreditTypesService().then((response) => {
-      setCredits(response);
+      setCredits(response.data!);
     });
   }, []);
 
   useEffect(() => {
     getCreditTypesService().then((response) => {
-      setCredits(response);
+      setCredits(response.data!);
     });
   }, [creditTypeIndirectPayments.creditType?._id]);
 

@@ -18,8 +18,8 @@ export default function RequireAuth() {
     if (!token) return navigate("/");
   }, [token, navigate]);
 
-  return user.roles[0].name !== UserRoles.UNDEFINED &&
-    user.roles.some((role) =>
+  return user.roles![0].name !== UserRoles.UNDEFINED &&
+    user.roles!.some((role) =>
       allowedRoutes[role.name as string].includes(location.pathname)
     ) ? (
     <Outlet />
