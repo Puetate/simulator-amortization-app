@@ -6,7 +6,10 @@ function Register() {
         document.title = "Registro";
     }, []);
     return (
-        <FormRegister />
+
+        <div className="flex items-center justify-center h-screen">
+            <FormRegister />
+        </div>
     );
 }
 
