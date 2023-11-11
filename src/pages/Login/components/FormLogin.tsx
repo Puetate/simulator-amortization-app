@@ -6,6 +6,7 @@ import { useSessionStore } from "../../../store";
 import * as Yup from "yup";
 import { useForm, yupResolver } from "@mantine/form";
 import loginService from "../services/loginService";
+import { useState } from "react";
 
 export interface Credentials {
     email: string;
@@ -25,6 +26,7 @@ const validationSchema = Yup.object<Credentials>().shape({
 });
 
 export default function FormLogin() {
+    const [loading, setLoading] = useState(false);
     const { setUser, setToken } = useSessionStore();
 
 
@@ -36,11 +38,13 @@ export default function FormLogin() {
 
     const handleSubmit = async (credentials: Credentials) => {
         const res = await loginService(credentials);
-        if (res.user && res.token) {
+        if (res.error || res == null) return setLoading(false);
+        
             setUser(res.user);
             setToken(res.token);
-        } 
-    }
+        }
+   
+
 
 
     return (

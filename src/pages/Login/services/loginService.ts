@@ -9,7 +9,7 @@ export interface UserAuthResponse {
     token: string;
 }
 
-const URL = "api/auth/login";
+const URL = "/auth/login";
 export default async function loginService(credentials: Credentials) {
     const res = await API.post<UserAuthResponse>({ url: URL, data: credentials });
     return res;
