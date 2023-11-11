@@ -1,24 +1,18 @@
-import { Button, NumberInput, Radio, Select, Text } from "@mantine/core";
+import { Button, Loader, NumberInput, Radio, Select, Text } from "@mantine/core";
 import { useEffect, useState } from "react";
-import { cn } from "../../../utils";
-import {
-  Credits,
-  getCreditTypesService,
-} from "./services/getCreditTypeService";
-import {
-  CreditTypeIndirectPayments,
-  getIndirectPaymentByCreditTypeIdService,
-} from "./services/getIndirectPaymentByCreditTypeIdService";
+import { CreditType, IndirectPayment } from "../../../models";
+import { cn, truncateToDecimals } from "../../../utils";
+import IndirectPaymentsInfo from "./components/IndirectPaymentsInfo";
+import Item from "./components/Item";
+import { Credits, getCreditTypesService } from "./services/getCreditTypeService";
+import { getIndirectPaymentByCreditTypeIdService } from "./services/getIndirectPaymentByCreditTypeIdService";
 
-const creditInitialValue: CreditTypeIndirectPayments = {
-  creditType: {
-    _id: "",
-    name: "",
-    interestRate: 0,
-    maxTime: 0,
-    minTime: 0,
-  },
-  indirectPayments: [],
+const creditTypeInitialValue: CreditType = {
+  _id: "",
+  name: "",
+  interestRate: 0,
+  maxTime: 0,
+  minTime: 0
 };
 
 export default function Amortization() {
@@ -26,8 +20,9 @@ export default function Amortization() {
   const [balance, setBalance] = useState<number>(0);
   const [months, setMonths] = useState<number>(0);
   const [amortization, setAmortization] = useState<string>("alemana");
-  const [creditTypeIndirectPayments, setCreditTypeIndirectPayments] =
-    useState<CreditTypeIndirectPayments>(creditInitialValue);
+  const [creditType, setCreditType] = useState<CreditType>(creditTypeInitialValue);
+  const [indirectPayments, setIndirectPayments] = useState<IndirectPayment[]>([]);
+  const [amortizationTBody, setAmortizationTBody] = useState<JSX.Element | null>(null);
 
   const [loadingCreditType, setLoadingCreditType] = useState<boolean>(false);
 
@@ -35,19 +30,46 @@ export default function Amortization() {
     if (!amortization) return;
     setLoadingCreditType(true);
     const res = await getIndirectPaymentByCreditTypeIdService(amortization);
-    setCreditTypeIndirectPayments(res);
+    setCreditType(res.creditType);
+    setIndirectPayments(res.indirectPayments ?? []);
     setMonths(res.creditType.minTime);
+    setAmortizationTBody(null);
     setLoadingCreditType(false);
   };
 
-  const generateAmortizationTable = () => {
-    const { creditType } = creditTypeIndirectPayments;
-    const interest = (balance * (creditType.interestRate / 100)) / 12;
+  const generateAmortizationTBody = () => {
+    let currentBalance = balance;
+    const monthlyInterest = creditType.interestRate / 100 / 12;
     return (
-      <tbody>
-        <tr>
-          <td className="border border-black">1</td>
-        </tr>
+      <tbody className="w-full">
+        {Array.from({ length: months + 1 }).map((_, index) => {
+          const interest = (currentBalance * (creditType.interestRate / 100)) / 12;
+          let capital = 0;
+          let quota = 0;
+          if (amortization === "alemana" && index !== 0) {
+            capital = balance / months;
+            quota = interest + capital;
+          } else if (amortization === "francesa" && index !== 0) {
+            quota = balance * (monthlyInterest / (1 - (1 + monthlyInterest) ** -months));
+            capital = quota - interest;
+          }
+          currentBalance -= capital;
+          const row = (
+            <tr key={index}>
+              <td className="border border-black">{index}</td>
+              <td className="border border-black">{index === 0 ? "-" : truncateToDecimals(quota, 2)}</td>
+              <td className="border border-black">{index === 0 ? "-" : truncateToDecimals(interest, 2)}</td>
+              <td className="border border-black">{index === 0 ? "-" : truncateToDecimals(capital, 2)}</td>
+              <td className="border border-black">{truncateToDecimals(currentBalance, 2)}</td>
+              {indirectPayments.map((indirectPayment) => (
+                <th className="border border-black">
+                  {index === 0 ? "-" : quota + indirectPayment.mount / months}
+                </th>
+              ))}
+            </tr>
+          );
+          return row;
+        })}
       </tbody>
     );
   };
@@ -58,51 +80,49 @@ export default function Amortization() {
     });
   }, []);
 
-  useEffect(() => {
-    getCreditTypesService().then((response) => {
-      setCredits(response);
-    });
-  }, [creditTypeIndirectPayments.creditType?._id]);
-
   return (
     <div>
-      <div className="flex gap-5 items-center">
+      <div className="flex items-end gap-5">
         <Select
-          className="flex-[0.4]"
           label="Tipo de crédito"
           placeholder="Seleccione un tipo de crédito"
           onChange={onCreditTypeChange}
           disabled={loadingCreditType}
           data={credits}
+          classNames={{ input: "border border-blue-800" }}
         />
         <Radio.Group
+          className="self-center"
           label="Amortización"
           value={amortization}
           onChange={setAmortization}
         >
           <div className="flex gap-2">
             <Radio
-              disabled={loadingCreditType}
+              classNames={{ radio: "border border-blue-800" }}
+              disabled={loadingCreditType || creditType?._id === ""}
               checked
               label="Francesa"
               value="francesa"
             />
             <Radio
-              disabled={loadingCreditType}
+              classNames={{ radio: "border border-blue-800" }}
+              disabled={loadingCreditType || creditType?._id === ""}
               label="Alemana"
               value="alemana"
             />
           </div>
         </Radio.Group>
-        {creditTypeIndirectPayments.creditType?._id === "" ? (
+        {creditType?._id === "" ? (
           ""
         ) : (
           <>
             <NumberInput
-              min={creditTypeIndirectPayments.creditType.minTime}
-              max={creditTypeIndirectPayments.creditType.maxTime}
+              min={creditType.minTime}
+              max={creditType.maxTime}
               value={months}
-              label={`Meses (${creditTypeIndirectPayments.creditType.minTime} - ${creditTypeIndirectPayments.creditType.maxTime})`}
+              label={`Meses (${creditType.minTime} - ${creditType.maxTime})`}
+              classNames={{ input: "border border-blue-800" }}
               onChange={(value) => setMonths(+value)}
               placeholder="5"
               disabled={loadingCreditType}
@@ -111,60 +131,66 @@ export default function Amortization() {
               min={0}
               label="Saldo"
               onChange={(value) => setBalance(+value)}
+              classNames={{ input: "border border-blue-800" }}
               placeholder="1000"
               value={balance}
               disabled={loadingCreditType}
             />
           </>
         )}
-        <Button>Calcular</Button>
+        <Button
+          className="bg-blue-800"
+          size="md"
+          disabled={creditType?._id === "" || loadingCreditType || balance === 0}
+          onClick={() => setAmortizationTBody(generateAmortizationTBody())}
+        >
+          Generar
+        </Button>
       </div>
-      {loadingCreditType && <div>Cargando...</div>}
+      {loadingCreditType && (
+        <div className="flex justify-center py-7">
+          <Loader color="blue" />
+        </div>
+      )}
       <div
         className={cn(
-          `flex flex-col gap-4 ${
-            creditTypeIndirectPayments.creditType?._id === "" ||
-            loadingCreditType
-              ? "hidden"
-              : ""
-          }`
+          `mt-4 flex flex-col gap-4 ${creditType?._id === "" || loadingCreditType ? "hidden" : ""}`
         )}
       >
-        <Text className="text-center">
-          {creditTypeIndirectPayments.creditType?._id === ""
+        <Text className="text-center font-bold ">
+          {creditType?._id === ""
             ? "Ningún crédito seleccionado"
-            : `Crédito ${creditTypeIndirectPayments.creditType?.name} seleccionado`}
+            : `Crédito ${creditType?.name} seleccionado`}
         </Text>
-        <div className="flex gap-3 justify-center">
-          <Text>
-            <span className="font-bold">Crédito: </span>
-            {creditTypeIndirectPayments.creditType.name}
-          </Text>
-          <Text>
-            <span className="font-bold">Tiempo mínimo: </span>
-            {creditTypeIndirectPayments.creditType.minTime}
-          </Text>
-          <Text>
-            <span className="font-bold">Tiempo máximo: </span>
-            {`${creditTypeIndirectPayments.creditType.maxTime} meses`}
-          </Text>
-          <Text>
-            <span className="font-bold"> Tasa de interés: </span>
-            {`${creditTypeIndirectPayments.creditType.interestRate} meses`}
-          </Text>
+        <div className="flex flex-col gap-1">
+          <div className="flex justify-center gap-3">
+            <Item label="Tiempo mínimo: " value={`${creditType.minTime} meses`} />
+            <Item label="Tiempo máximo: " value={`${creditType.maxTime} meses`} />
+            <Item label="Tasa de interés: " value={`${creditType.interestRate}%`} />
+          </div>
+          <IndirectPaymentsInfo indirectPayments={indirectPayments} months={months} />
         </div>
       </div>
       <div>
-        <table className="table-auto w-full">
-          <thead>
-            <tr>
-              <th className="border border-black">Nro</th>
-              <th className="border border-black">Cuota</th>
-              <th className="border border-black">Capital</th>
-              <th className="border border-black">Saldo</th>
-            </tr>
-          </thead>
-        </table>
+        <>
+          <table className="mt-3 w-full table-auto">
+            <thead>
+              <tr className="bg-blue-800 text-white">
+                <th className="border border-black">Nro</th>
+                <th className="border border-black">Interés</th>
+                <th className="border border-black">Cuota</th>
+                <th className="border border-black">Capital</th>
+                <th className="border border-black">Saldo</th>
+                {indirectPayments.map((indirectPayment) => (
+                  <th key={indirectPayment.name} className="border border-black">
+                    Cuota incluido {indirectPayment.name.toLowerCase()}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            {amortizationTBody}
+          </table>
+        </>
       </div>
     </div>
   );
