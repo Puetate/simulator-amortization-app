@@ -1,16 +1,18 @@
 import { AppShell, Burger, Group, Text } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
+import { useState } from "react";
 import { Outlet } from "react-router-dom";
 import { useSessionStore } from "../store";
 import ConfigMenu from "./components/ConfigMenu";
+import NavLinks from "./components/NavLinks";
 
 export default function Layout() {
   const { user } = useSessionStore();
   const [opened, { toggle }] = useDisclosure();
-  //   const [title, setTitle] = useState("");
-  //   const handleLinkChange = (title: string) => {
-  //     setTitle(title);
-  //   };
+  const [title, setTitle] = useState("");
+  const handleLinkChange = (title: string) => {
+    setTitle(title);
+  };
   return (
     <AppShell
       layout="alt"
@@ -30,7 +32,7 @@ export default function Layout() {
               color="white"
             />
             <Text className="hidden text-xl font-bold uppercase md:block">
-              {/* {title} */}
+              {title}
             </Text>
           </div>
           <div className="flex items-center justify-center gap-3">
@@ -56,7 +58,7 @@ export default function Layout() {
             width={100}
           />
         </Group>
-        {/* <NavLinks onPathChange={handleLinkChange} /> */}
+        <NavLinks onPathChange={handleLinkChange} />
       </AppShell.Navbar>
       <AppShell.Main className="flex bg-gray-900">
         <div className="w-full">
