@@ -16,19 +16,19 @@ export interface AdminRoutes {
 export const PublicRoutes: PublicRoutes = {
   default: "/",
   login: "/login",
-  register: "/register",
+  register: "/register"
 };
 
 export const UserRoutes: UserRoutes = {
-  amortization: "/user/amortization",
+  amortization: "/user/amortization"
 };
 
 export const AdminRoutes: AdminRoutes = {
   company: "/admin/company",
-  companyCreate: "/admin/credit",
+  companyCreate: "/admin/credit"
 };
 
 export const AppRoutes = {
   ...UserRoutes,
-  ...AdminRoutes,
+  ...AdminRoutes
 };

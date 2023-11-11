@@ -32,8 +32,8 @@ export default function NavLinks({ onPathChange }: { onPathChange: (label: strin
             component={Link}
             leftSection={<LinkIcon />}
             className={cn(
-              " mt-2 rounded-lg hover:bg-gray-600",
-              pathname === link.href && "bg-gray-600 font-bold"
+              "mt-2 rounded-lg font-bold text-white hover:bg-white hover:text-black",
+              pathname === link.href && "bg-white text-black"
             )}
           />
         );
