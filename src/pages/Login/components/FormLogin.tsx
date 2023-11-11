@@ -1,8 +1,11 @@
-import { Box, Button, Text } from "@mantine/core";
+import { Box, Button, Text,TextInput } from "@mantine/core";
 import logo from "../../../assets/logo.png";
 import { Link } from "react-router-dom";
 import { PublicRoutes } from "../../../models/routes";
-
+import { useSessionStore } from "../../../store";
+import * as Yup from "yup";
+import { useForm, yupResolver } from "@mantine/form";
+import loginService from "../services/loginService";
 
 export interface Credentials {
     email: string;
@@ -14,7 +17,31 @@ const initialValues: Credentials = {
     password: "",
 };
 
+const validationSchema = Yup.object<Credentials>().shape({
+    email: Yup.string().required().email("Correo invalido"),
+    password: Yup.string()
+        .required()
+        .min(6, "La contraseña debe ser como mínimo de 6 caracteres"),
+});
+
 export default function FormLogin() {
+    const { setUser, setToken } = useSessionStore();
+
+
+    const form = useForm({
+        initialValues,
+        validate: yupResolver(validationSchema),
+    });
+
+
+    const handleSubmit = async (credentials: Credentials) => {
+        const res = await loginService(credentials);
+        if (res.user && res.token) {
+            setUser(res.user);
+            setToken(res.token);
+        } 
+    }
+
 
     return (
         <>

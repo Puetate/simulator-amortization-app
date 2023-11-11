@@ -6,7 +6,7 @@ const BASE_URL = import.meta.env.VITE_BASE_URL;
 
 const axiosConfig = axios.create({
   baseURL: BASE_URL,
-  withCredentials: true,
+  withCredentials: true
 });
 
 axiosConfig.interceptors.request.use((config: InternalAxiosRequestConfig) => {
@@ -20,7 +20,7 @@ axiosConfig.interceptors.response.use(
     return response;
   },
   (error) => {
-    const errorMessage = error.response?.data.error;
+    const errorMessage = error.code == "ERR_NETWORK" ? "Error de conexión" : error.response?.data.error;
     SnackbarManager.error(errorMessage);
     return Promise.reject(error);
   }
