@@ -1,5 +1,8 @@
-import { Button, Loader, NumberInput, Radio, Select, Text } from "@mantine/core";
-import { useEffect, useState } from "react";
+import { ActionIcon, Button, Loader, NumberInput, Radio, Select, Text } from "@mantine/core";
+import { IconFileTypePdf } from "@tabler/icons-react";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
+import { useEffect, useRef, useState } from "react";
 import { CreditType, IndirectPayment } from "../../../models";
 import { cn, truncateToDecimals } from "../../../utils";
 import IndirectPaymentsInfo from "./components/IndirectPaymentsInfo";
@@ -26,6 +29,8 @@ export default function Amortization() {
 
   const [loadingCreditType, setLoadingCreditType] = useState<boolean>(false);
 
+  const pdfRef = useRef(null);
+
   const onCreditTypeChange = async (amortization: string | null) => {
     if (!amortization) return;
     setLoadingCreditType(true);
@@ -35,6 +40,26 @@ export default function Amortization() {
     setMonths(res.creditType.minTime);
     setAmortizationTBody(null);
     setLoadingCreditType(false);
+  };
+
+  // const handleExportPDF = () => {
+  //   const input = pdfRef.current;
+  //   if (!input) return;
+  //   html2canvas(input).then((canvas) => {
+  //     const imgData = canvas.toDataURL("image/png");
+  //     const pdf = new jsPDF("p", "mm");
+  //     pdf.addImage(imgData);
+  //     pdf.save("exported-content.pdf");
+  //   });
+  // };
+
+  const handleExportPDF = () => {
+    console.log(pdfRef.current);
+    if (!pdfRef.current) return;
+    const orientation = "landscape"; // Orientación "portrait" para vertical, "landscape" para horizontal
+    const doc = new jsPDF({ orientation });
+    autoTable(doc, { html: pdfRef.current });
+    doc.save("table.pdf");
   };
 
   const generateAmortizationTBody = () => {
@@ -62,7 +87,7 @@ export default function Amortization() {
               <td className="border border-black">{index === 0 ? "-" : truncateToDecimals(capital, 2)}</td>
               <td className="border border-black">{truncateToDecimals(currentBalance, 2)}</td>
               {indirectPayments.map((indirectPayment) => (
-                <th className="border border-black">
+                <th key={indirectPayment.name} className="border border-black">
                   {index === 0 ? "-" : quota + indirectPayment.mount / months}
                 </th>
               ))}
@@ -146,6 +171,14 @@ export default function Amortization() {
         >
           Generar
         </Button>
+        <ActionIcon
+          className="bg-red-700"
+          size="xl"
+          disabled={creditType?._id === "" || loadingCreditType || balance === 0}
+          onClick={() => handleExportPDF()}
+        >
+          <IconFileTypePdf />
+        </ActionIcon>
       </div>
       {loadingCreditType && (
         <div className="flex justify-center py-7">
@@ -172,25 +205,23 @@ export default function Amortization() {
         </div>
       </div>
       <div>
-        <>
-          <table className="mt-3 w-full table-auto">
-            <thead>
-              <tr className="bg-blue-800 text-white">
-                <th className="border border-black">Nro</th>
-                <th className="border border-black">Interés</th>
-                <th className="border border-black">Cuota</th>
-                <th className="border border-black">Capital</th>
-                <th className="border border-black">Saldo</th>
-                {indirectPayments.map((indirectPayment) => (
-                  <th key={indirectPayment.name} className="border border-black">
-                    Cuota incluido {indirectPayment.name.toLowerCase()}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            {amortizationTBody}
-          </table>
-        </>
+        <table ref={pdfRef} style={{ width: "100%" }} className="mt-3 w-full" id="#my-table">
+          <thead>
+            <tr className="bg-blue-800 text-white">
+              <th className="border border-black">Nro</th>
+              <th className="border border-black">Interés</th>
+              <th className="border border-black">Cuota</th>
+              <th className="border border-black">Capital</th>
+              <th className="border border-black">Saldo</th>
+              {indirectPayments.map((indirectPayment) => (
+                <th key={indirectPayment.name} className="border border-black">
+                  Cuota incluido {indirectPayment.name.toLowerCase()}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          {amortizationTBody}
+        </table>
       </div>
     </div>
   );
