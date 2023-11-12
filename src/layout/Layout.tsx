@@ -19,21 +19,12 @@ export default function Layout() {
       header={{ height: 60 }}
       navbar={{ width: 300, breakpoint: "md", collapsed: { mobile: !opened } }}
       padding="md"
-      className="text-white"
     >
-      <AppShell.Header className=" bg-gray-900">
+      <AppShell.Header className=" bg-slate-">
         <Group h="100%" px="md" className="flex justify-between">
           <div>
-            <Burger
-              opened={opened}
-              onClick={toggle}
-              hiddenFrom="md"
-              size="sm"
-              color="white"
-            />
-            <Text className="hidden text-xl font-bold uppercase md:block">
-              {title}
-            </Text>
+            <Burger opened={opened} onClick={toggle} hiddenFrom="md" size="sm" color="white" />
+            <Text className="hidden text-xl font-bold uppercase md:block">{title}</Text>
           </div>
           <div className="flex items-center justify-center gap-3">
             <Text>{user.names}</Text>
@@ -41,17 +32,11 @@ export default function Layout() {
           </div>
         </Group>
       </AppShell.Header>
-      <AppShell.Navbar p="md" className=" bg-gray-900">
+      <AppShell.Navbar p="md" className=" bg-blue-800">
         <Group>
-          <Burger
-            opened={opened}
-            onClick={toggle}
-            hiddenFrom="md"
-            size="sm"
-            color="white"
-          />
+          <Burger opened={opened} onClick={toggle} hiddenFrom="md" size="sm" color="white" />
           <img
-            src="/vivo-vivo.svg"
+            src="/treejs-logo.png"
             className="sm:mx-auto sm:w-28"
             alt="vivo vivo"
             height={100}
@@ -60,7 +45,7 @@ export default function Layout() {
         </Group>
         <NavLinks onPathChange={handleLinkChange} />
       </AppShell.Navbar>
-      <AppShell.Main className="flex bg-gray-900">
+      <AppShell.Main className="flex bg-white">
         <div className="w-full">
           <Outlet />
         </div>

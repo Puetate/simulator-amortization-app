@@ -14,5 +14,6 @@ export interface User {
   personId: string;
   names: string;
   email: string;
-  roles: Roles[];
+  password?: string;
+  roles?: Roles[];
 }

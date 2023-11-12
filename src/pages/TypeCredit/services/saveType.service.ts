@@ -1,5 +1,5 @@
-import { CreditType } from "../../../../../models";
-import API from "../../../../../lib/API";
+import { CreditType } from "../../../models";
+import API from "../../../lib/API";
 
 
 const URL = "credit-type";
