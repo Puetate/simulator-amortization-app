@@ -85,7 +85,7 @@ function TypeCreditTable() {
         <>            
             <Flex justify="start">
                 <Button className="ml-9" onClick={onClickAddButton} leftSection={<IconSquareRoundedPlusFilled />}>
-						Agregar
+						Crear Crédito
 					</Button>
             </Flex>
             <Modal  opened={openedAdd} onClose={closeAdd} withCloseButton={false} radius="lg" padding="xs">
