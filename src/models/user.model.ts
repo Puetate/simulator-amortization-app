@@ -4,9 +4,9 @@ export interface Roles {
 }
 
 export enum UserRoles {
-  CLIENT = "CLIENTE",
+  USER = "USER",
   ADMIN = "ADMINISTRADOR",
-  UNDEFINED = "UNDEFINED",
+  UNDEFINED = "UNDEFINED"
 }
 
 export interface User {

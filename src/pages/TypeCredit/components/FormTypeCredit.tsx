@@ -3,8 +3,18 @@ import { useRef, useState } from "react";
 import { CreditType } from "../../../models";
 import * as Yup from "yup";
 import { useForm, yupResolver } from "@mantine/form";
-import { saveTypeCredit } from "../services/saveType.service";
+import { editCreditTypeService, saveTypeCreditService } from "../services";
+import { SnackbarManager } from "../../../utils";
+import { CreditTypeIndirectPayment } from "../../../models/creditTypeIndirectPayment.model";
 
+    const title = {
+        create: "Crear crédito",
+    }
+
+    const messages = {
+        create: "Crédito creado exitosamente",
+}
+    
     const initialValues: CreditType = {
     _id: "",
     name: "",
@@ -22,29 +32,32 @@ import { saveTypeCredit } from "../services/saveType.service";
 
     function FormTypeCredit({
     onSubmitSuccess,
-    onCancel
+    onCancel,
     }: {
     onSubmitSuccess: () => void;
-    onCancel: () => void;
-    }) {
+            onCancel: () => void,
+        }
+    ) {
     const [loading, setLoading] = useState(false);
-
-    const form = useForm({
+        
+    const form = useForm(
+        {
         initialValues,
         validate: yupResolver(validationSchema)
-    });
+    })
 
     const handleSubmit = async (creditType: CreditType) => {
-        setLoading(true);
-        const res = await saveTypeCredit(creditType);
-        setLoading(false);
-        onSubmitSuccess();
-        onCancel();
+    setLoading(true)
+        const res = await saveTypeCreditService(creditType);
+        if (res.error || res.data == null) return setLoading(false)
+        SnackbarManager.success(messages.create)
+    setLoading(false)
+    onSubmitSuccess()
     };
 
     return (
         <Flex direction="column" p="lg">
-        <Text className="text-lg font-bold text-blue-500 lg:text-xl xl:text-2xl"> Crear Crédito</Text>
+        <Text className="text-lg font-bold text-blue-500 lg:text-xl xl:text-2xl">{title.create}</Text>
         <form onSubmit={form.onSubmit(handleSubmit)}>
             <Flex direction="column" gap="lg" className="mt-4">
             <TextInput withAsterisk label="Nombre del Crédito" {...form.getInputProps("name")} />
@@ -85,7 +98,7 @@ import { saveTypeCredit } from "../services/saveType.service";
             </Flex>
         </form>
         </Flex>
-    );
+    )
 }
 
 export default FormTypeCredit;

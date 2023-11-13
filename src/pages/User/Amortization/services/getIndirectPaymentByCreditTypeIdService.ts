@@ -6,7 +6,7 @@ export interface CreditTypeIndirectPayments {
   indirectPayments: IndirectPayment[];
 }
 
-const URL = "/api/credit-type-indirect-payment/credit-type";
+const URL = "/credit-type-indirect-payment/credit-type";
 
 export async function getIndirectPaymentByCreditTypeIdService(
   creditTypeId: string

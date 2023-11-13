@@ -1,18 +1,25 @@
 import { Box, Button, Text, TextInput, PasswordInput } from "@mantine/core";
 import logo from "../../../assets/logo.png";
 import { Link } from "react-router-dom";
-import { AdminRoutes, PublicRoutes, UserRoutes } from "../../../models/routes";
+import { AdminRoutes, AppRoutes, PublicRoutes, UserRoutes } from "../../../models/routes";
 import { useSessionStore } from "../../../store";
 import { useNavigate } from "react-router-dom";
 import * as Yup from "yup";
 import { useForm, yupResolver } from "@mantine/form";
 import loginService from "../services/loginService";
 import { useState } from "react";
+import { UserRoles } from "../../../models";
+import { CheckSession } from "../../../components";
 
 export interface Credentials {
     email: string;
     password: string;
 }
+
+const defaultRoutes: Record<string, string> = {
+    ADMIN: AdminRoutes.company,
+    USER: UserRoutes.amortization
+};
 
 const initialValues: Credentials = {
     email: "",
@@ -43,11 +50,17 @@ export default function FormLogin() {
         setLoading(true);
         const res = await loginService(credentials);
         if (res.error || res == null) return setLoading(false);
-        console.log(res);
+        const userRoles = res.data!.user.roles;
+    
+        if (!userRoles || userRoles.length === 0) {
+            setLoading(false);
+            return;
+        }
         setUser(res.data!.user);
         setToken(res.data!.token);
         setLoading(false);
-        navigate(AdminRoutes.company);
+        const userRole = userRoles[0].name;
+        navigate(defaultRoutes[userRole]);
     }
 
 

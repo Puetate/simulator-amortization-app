@@ -5,7 +5,7 @@ export interface Credits {
   value: string;
 }
 
-const URL = "api/credit-type";
+const URL = "/credit-type";
 
 export async function getCreditTypesService() {
   const res = await API.get<Credits[]>({ url: URL });
