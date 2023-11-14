@@ -4,8 +4,8 @@ import CompanyTable from "./components/CompanyTable";
 function Company() {
   return (
     <div>
-      <TypeCredit />
       <CompanyTable />
+      <TypeCredit />
     </div>
   );
 }

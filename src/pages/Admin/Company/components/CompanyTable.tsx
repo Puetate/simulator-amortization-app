@@ -2,9 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { DataTableColumn } from "mantine-datatable";
 import DataTable from "../../../../components/DataTable";
 import { ActionIcon, Button, Flex, Group, Modal, Tooltip } from "@mantine/core";
-
 import { IconEdit, IconSquareRoundedPlusFilled } from "@tabler/icons-react";
-
 import { useDisclosure } from "@mantine/hooks";
 import FormCompany from "./FormCompany";
 import { Company } from "../../../../models";
@@ -46,13 +44,13 @@ function CompanyTable() {
     };
 
     const onClickAddButton = () => {
-		open()
-        setSelectedCompany(null);
+		  open()
+      setSelectedCompany(null);
 	}
 
     const onSubmitSuccess = async () => {
-        close()
-        await getCompanies();
+      close()
+      await getCompanies();
     }
 
     useEffect(() => {
@@ -91,7 +89,7 @@ function CompanyTable() {
             </Button>
             </Flex>
             <Modal opened={opened} onClose={close} withCloseButton={false} radius="lg" padding="xs">
-            <FormCompany onCancel={close} onSubmitSuccess={onSubmitSuccess} />
+            <FormCompany onCancel={close} onSubmitSuccess={onSubmitSuccess} selectedCompany={selectedCompany} />
             </Modal>
             <div className="p-9">
             <DataTable columns={usersColumns} records={listCompanies} className="w-full" />
