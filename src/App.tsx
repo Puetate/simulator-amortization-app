@@ -1,5 +1,6 @@
 import { MantineProvider } from "@mantine/core";
 import "@mantine/core/styles.css";
+import "mantine-datatable/styles.layer.css"
 import { SnackbarProvider } from "notistack";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { CheckSession } from "./components";
@@ -10,6 +11,7 @@ import Register from "./pages/Register/Register";
 import { SnackbarManagerConfigurator } from "./utils";
 import Company from "./pages/Admin/Company/Company";
 import Amortization from "./pages/User/Amortization/Amortization";
+import IndirectPayment from "./pages/IndirectPayment/IndirectPayment";
 
 function App() {
   return (
@@ -27,6 +29,7 @@ function App() {
               <Route element={<Layout />}>
                 <Route path={UserRoutes.amortization} element={<Amortization />} />
                 <Route path={AdminRoutes.company} element={<Company />} />
+                <Route path={AdminRoutes.indirectPayment} element={<IndirectPayment />} />
               </Route>
             </Route>
           </Routes>
