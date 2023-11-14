@@ -12,6 +12,7 @@ export interface AdminRoutes {
   company: string;
   companyCreate: string;
   indirectPayment: string;
+  creditType: string;
 }
 
 export const PublicRoutes: PublicRoutes = {
@@ -27,7 +28,8 @@ export const UserRoutes: UserRoutes = {
 export const AdminRoutes: AdminRoutes = {
   company: "/admin/company",
   companyCreate: "/admin/credit",
-  indirectPayment: "/admin/indirect-payment"
+  indirectPayment: "/admin/indirect-payment",
+  creditType: "/admin/credit-type",
 };
 
 export const AppRoutes = {

@@ -12,6 +12,7 @@ import { SnackbarManagerConfigurator } from "./utils";
 import Company from "./pages/Admin/Company/Company";
 import Amortization from "./pages/User/Amortization/Amortization";
 import IndirectPayment from "./pages/IndirectPayment/IndirectPayment";
+import { TypeCredit } from "./pages/TypeCredit";
 
 function App() {
   return (
@@ -30,6 +31,7 @@ function App() {
                 <Route path={UserRoutes.amortization} element={<Amortization />} />
                 <Route path={AdminRoutes.company} element={<Company />} />
                 <Route path={AdminRoutes.indirectPayment} element={<IndirectPayment />} />
+                <Route path={AdminRoutes.creditType} element={<TypeCredit />} />
               </Route>
             </Route>
           </Routes>
