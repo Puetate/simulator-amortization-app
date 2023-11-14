@@ -1,5 +1,5 @@
 import { NavLink } from "@mantine/core";
-import { IconBuildingBank, IconReportMoney, TablerIconsProps } from "@tabler/icons-react";
+import { IconBrandCashapp, IconBuildingBank, IconReportMoney, TablerIconsProps } from "@tabler/icons-react";
 import { useEffect } from "react";
 import { useLocation } from "react-router";
 import { Link } from "react-router-dom";
@@ -9,7 +9,7 @@ type Link = { label: string; href: string; icon: (props: TablerIconsProps) => JS
 
 const links: Record<string, Array<Link>> = {
   user: [{ label: "Amortización", href: "/user/amortization", icon: IconReportMoney }],
-  admin: [{ label: "Compañía", href: "/admin/company", icon: IconBuildingBank }]
+  admin: [{ label: "Compañía", href: "/admin/company", icon: IconBuildingBank },{ label: "Pagos Indirectos", href: "/admin/indirect-payment", icon: IconBrandCashapp }]
 };
 
 export default function NavLinks({ onPathChange }: { onPathChange: (label: string) => void }) {
