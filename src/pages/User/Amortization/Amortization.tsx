@@ -78,7 +78,7 @@ export default function Amortization() {
               <td className="border border-black">{truncateToDecimals(currentBalance, 2)}</td>
               {indirectPayments.map((indirectPayment) => (
                 <th key={indirectPayment.name} className="border border-black">
-                  {index === 0 ? "-" : truncateToDecimals(quota + indirectPayment.mount / months, 2)}
+                  {index === 0 ? "-" : truncateToDecimals(quota + indirectPayment.mount / 12, 2)}
                 </th>
               ))}
             </tr>
