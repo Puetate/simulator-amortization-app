@@ -8,8 +8,8 @@ import { editIndirectPaymentService, saveIndirectPaymentService } from "../servi
 
 
 const title = {
-    create: "Crear cobro indirecto de rutina",
-    edit: "Editar cobro indirecto de rutina"
+    create: "Crear cobro indirecto",
+    edit: "Editar cobro indirecto"
 }
 
 const messages = {
@@ -64,7 +64,7 @@ export default function FormIndirectPayment(
 
     return (
         <Flex direction="column" p="lg">
-            <Text mb="lg">{idRef.current ? title.edit : title.create}</Text>
+            <Text  className="text-lg font-bold text-blue-500 lg:text-xl xl:text-2xl" mb="lg">{idRef.current ? title.edit : title.create}</Text>
             <form onSubmit={form.onSubmit(handleSubmit)} >
                 <Flex direction="column" gap="lg">
                     <TextInput
