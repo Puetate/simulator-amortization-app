@@ -32,3 +32,8 @@ export const AppRoutes = {
   ...UserRoutes,
   ...AdminRoutes
 };
+
+export const defaultRoutes: Record<string, string> = {
+  ADMIN: AdminRoutes.company,
+  USER: UserRoutes.amortization
+};

@@ -4,10 +4,11 @@ import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import { useEffect, useRef, useState } from "react";
 import { CreditType, IndirectPayment } from "../../../models";
+import { useSessionStore } from "../../../store";
 import { cn, truncateToDecimals } from "../../../utils";
 import IndirectPaymentsInfo from "./components/IndirectPaymentsInfo";
 import Item from "./components/Item";
-import { Credits, getCreditTypesService } from "./services/getCreditTypeService";
+import { Credits, getCreditTypesByCompanyId } from "./services/getCreditTypeService";
 import { getIndirectPaymentByCreditTypeIdService } from "./services/getIndirectPaymentByCreditTypeIdService";
 
 const creditTypeInitialValue: CreditType = {
@@ -19,6 +20,7 @@ const creditTypeInitialValue: CreditType = {
 };
 
 export default function Amortization() {
+  const { user } = useSessionStore();
   const [credits, setCredits] = useState<Credits[]>([]);
   const [balance, setBalance] = useState<number>(0);
   const [months, setMonths] = useState<number>(0);
@@ -32,7 +34,7 @@ export default function Amortization() {
   const pdfRef = useRef(null);
 
   const onCreditTypeChange = async (amortization: string | null) => {
-    if (!amortization) return; 
+    if (!amortization) return;
     setLoadingCreditType(true);
     const res = await getIndirectPaymentByCreditTypeIdService(amortization);
     setCreditType(res.data!.creditType);
@@ -42,19 +44,7 @@ export default function Amortization() {
     setLoadingCreditType(false);
   };
 
-  // const handleExportPDF = () => {
-  //   const input = pdfRef.current;
-  //   if (!input) return;
-  //   html2canvas(input).then((canvas) => {
-  //     const imgData = canvas.toDataURL("image/png");
-  //     const pdf = new jsPDF("p", "mm");
-  //     pdf.addImage(imgData);
-  //     pdf.save("exported-content.pdf");
-  //   });
-  // };
-
   const handleExportPDF = () => {
-    console.log(pdfRef.current);
     if (!pdfRef.current) return;
     const orientation = "landscape"; // Orientación "portrait" para vertical, "landscape" para horizontal
     const doc = new jsPDF({ orientation });
@@ -100,10 +90,10 @@ export default function Amortization() {
   };
 
   useEffect(() => {
-    getCreditTypesService().then((response) => {
+    getCreditTypesByCompanyId(user.company._id).then((response) => {
       setCredits(response.data!);
     });
-  }, []);
+  }, [user.company._id]);
 
   return (
     <div>

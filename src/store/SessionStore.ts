@@ -14,7 +14,15 @@ const initialUser: User = {
   personId: "",
   names: "",
   email: "",
-  roles: [{ _id: "", name: UserRoles.CLIENT }],
+  company: {
+    _id: "",
+    name: "",
+    address: "",
+    phone: "",
+    logo: "",
+    ruc: ""
+  },
+  roles: [{ _id: "", name: UserRoles.UNDEFINED }]
 };
 
 export const useSessionStore = create(
@@ -27,10 +35,10 @@ export const useSessionStore = create(
       logout: () => {
         set(() => ({ token: "", user: initialUser }));
         useSessionStore.persist.clearStorage();
-      },
+      }
     }),
     {
-      name: "auth",
+      name: "auth"
     }
   )
 );

@@ -5,9 +5,10 @@ export interface Credits {
   value: string;
 }
 
-const URL = "/credit-type";
+const URL = "/company-credit-type/company/";
 
-export async function getCreditTypesService() {
-  const res = await API.get<Credits[]>({ url: URL });
+export async function getCreditTypesByCompanyId(companyId: string) {
+  const url = `${URL}${companyId}`;
+  const res = await API.get<Credits[]>({ url });
   return res;
 }

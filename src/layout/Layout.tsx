@@ -27,7 +27,9 @@ export default function Layout() {
             <Text className="hidden text-xl font-bold uppercase md:block">{title}</Text>
           </div>
           <div className="flex items-center justify-center gap-3">
-            <Text>{user.names}</Text>
+            <Text>
+              {user.names} - Entidad financiara: {user.company?.name}
+            </Text>
             <ConfigMenu />
           </div>
         </Group>

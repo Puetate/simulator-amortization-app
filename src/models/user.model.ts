@@ -1,3 +1,5 @@
+import { Company } from ".";
+
 export interface Roles {
   _id: string;
   name: UserRoles;
@@ -14,6 +16,7 @@ export interface User {
   personId: string;
   names: string;
   email: string;
+  company: Company;
   password?: string;
-  roles?: Roles[];
+  roles: Roles[];
 }
