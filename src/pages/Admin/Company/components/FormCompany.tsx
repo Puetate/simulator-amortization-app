@@ -1,4 +1,4 @@
-import { Button, Flex, Text, TextInput, FileInput, FileButton, Group } from "@mantine/core";
+import { Button, Flex, Text, TextInput, FileButton } from "@mantine/core";
 import { useRef, useState } from "react";
 import * as Yup from "yup";
 import { useForm, yupResolver } from "@mantine/form";
@@ -107,7 +107,7 @@ export default function FormCompany(
 
     return (
         <Flex direction="column" p="lg">
-            <Text className="text-lg font-bold text-blue-500 lg:text-xl xl:text-2xl">Entidad Finaciera</Text>
+            <Text className="text-lg font-bold text-blue-500 lg:text-xl xl:text-2xl">{idRef.current ? title.edit : title.create}</Text>
             <form  onSubmit={form.onSubmit(handleSaveCompany)} >
                 <Flex direction="column" gap="lg">
                     <div className="flex flex-col gap-3">
