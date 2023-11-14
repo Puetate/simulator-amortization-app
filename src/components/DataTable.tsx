@@ -38,6 +38,7 @@ function DataTable<T>(props: DataTableProps<T>) {
 
     
     return (
+		
         <MantineDataTable
         withTableBorder
 		withColumnBorders
